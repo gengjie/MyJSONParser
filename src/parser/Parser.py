@@ -16,7 +16,6 @@ class Parser(object):
     def __next(self):
         self.last = self.tokens[0]
         self.tokens.remove(self.last)
-        print 'LAST:%s \t %d' % (self.last.value, len(self.tokens))
         return self.last
 
     def __top(self):
@@ -38,7 +37,6 @@ class Parser(object):
             return obj
         elif token.is_type(TokenType.STRING):
             obj = self.parse_key(token.value, obj)
-        print 'obj', obj
         return obj
 
     def parse_key(self, key, obj):
@@ -49,18 +47,14 @@ class Parser(object):
             token = self.__next()
             if token.is_primary():
                 obj[key] = token.value
-                print '>>>>>>>>>>', obj
             elif token.is_type(TokenType.START_ARRAY):
                 array = self.parse_array()
                 obj[key] = array
             elif token.is_type(TokenType.START_OBJ):
                 _obj = self.parse_obj()
                 obj[key] = _obj
-                print 'OBJ:\t', obj
-            print self.__top().value, '<<<<<<<<<<<<'
             if self.__top().is_type(TokenType.COMMA):
                 _ = self.__next() # consume ,
-                print ']]]]]]]]]]]', self.__top().value
                 if self.__top().is_type(TokenType.STRING):
                     key = self.__next().value
                     obj = self.parse_key(key, obj)
@@ -72,7 +66,6 @@ class Parser(object):
         return obj
 
     def parse_array(self):
-        print 'enter parse_array'
         array = []
         next = self.__next()
         # nest array
@@ -95,7 +88,6 @@ class Parser(object):
         elif next.is_type(TokenType.END_ARRAY):
             return array
         _ = self.__next()
-        print 'array:', array
         return array
 
     def parse_element(self, array):
