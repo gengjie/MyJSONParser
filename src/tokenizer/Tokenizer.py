@@ -223,6 +223,10 @@ class Tokenizer(object):
                 c = self.__read()
             self.__unread()
             _num = self.append_num(_num)
+        if '.' in _num:
+            _num = float(_num)
+        else:
+            _num = int(_num)
         return Token(TokenType.NUMBER, _num)
                 
     def append_num(self, _num):
